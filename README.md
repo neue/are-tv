@@ -1,7 +1,7 @@
 arena-angular-starter
 =====================
 
-This is a fork of broskoski's cool (Angular Arena Starter)[https://github.com/broskoski/arena-angular-starter]. Mostly it trims out all the CSS and layout markup, It also fills in the title and meta-description with whatever's in your Arena Channel.
+This is a fork of broskoski's cool [Angular Arena Starter](https://github.com/broskoski/arena-angular-starter). Mostly it trims out all the CSS and layout markup, It also fills in the title and meta-description with whatever's in your Arena Channel.
 
 **Installation:**
 
