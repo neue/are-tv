@@ -1,9 +1,7 @@
 arena-angular-starter
 =====================
 
-![Screenshot](http://f.cl.ly/items/30322r221f431O3z012d/Screen%20Shot%202013-12-09%20at%207.10.58%20PM.png)
-
-A very basic Arena API example using Angular.js
+This is a fork of broskoski's cool (Angular Arena Starter)[https://github.com/broskoski/arena-angular-starter]. Mostly it trims out all the CSS and layout markup, It also fills in the title and meta-description with whatever's in your Arena Channel.
 
 **Installation:**
 
