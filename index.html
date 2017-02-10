@@ -15,6 +15,11 @@
   <script src="bower_components/angular-md/dist/angular-md.min.js"></script>
   
   <style type="text/css" media="screen">
+  
+  body {
+    background-color: #000;
+  }
+  
   * {
     margin: 0;
     padding: 0;
@@ -65,7 +70,7 @@
 </div>
 -->
 
-<youtube-video video-url="currentShow" player-vars="playerVars" class="fullvideo"></youtube-video>
+<youtube-video video-url="currentYouTube" player-vars="playerVars" class="fullvideo"></youtube-video>
 
 
 <!-- End Channel contents loop -->
@@ -75,31 +80,29 @@ var app = angular.module('arenaApp', ['ngResource', 'ngSanitize', 'youtube-embed
 
 app.controller('channelShow', function($rootScope, $scope, $resource) { 
   var shows = [];
-  var currentShow = 0;
   var Channel = $resource('http://api.are.na/v2/channels/:slug');
   var channel = Channel.get({slug: 'api-playground', sort: 'position', direction: 'desc'}, function(){
     $scope.channel = channel;
     $rootScope.title = channel.title
     description = _.findWhere(document.getElementsByTagName('meta'), { 'name': 'description' });
     description.content = channel.metadata ? channel.metadata.description : '';
-    console.log(channel);
     for (var i = 0; i < channel.contents.length; i++) {
       if (channel.contents[i].class == "Media") {
         shows.push(channel.contents[i].source.url);
       }
     }
-    console.log(shows);
-    $scope.currentShow = shows[currentShow];
+    var showsCurrent = Math.floor(Math.random()*shows.length);
+    console.log(showsCurrent);
+    // console.log(shows);
+    $scope.currentYouTube = shows[showsCurrent];
     $scope.playerVars = {
         controls: 0,
         autoplay: 1
     };
     $scope.$on('youtube.player.ended', function ($event, player) {
-      // play it again
-      // player.playVideo();
-      currentShow++;
-      console.log("DONE MUFUKKA, next up:"+shows[currentShow]);
-      $scope.currentShow = shows[currentShow];
+      showsCurrent = (showsCurrent + 1) % shows.length;
+      console.log("DONE MUFUKKA, next up:"+shows[showsCurrent]);
+      $scope.currentYouTube = shows[showsCurrent];
       
     });
     
