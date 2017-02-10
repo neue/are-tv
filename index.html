@@ -52,29 +52,10 @@
 <header class="channelBug">
   <h1>{{channel.title}}</h1>
   <md ng-model="channel.metadata.description"></md>
-  
-  <!-- <p ng-if="channel.metadata.description">{{channel.metadata.description}}</p> -->
 </header>
-
-<!-- 
-<main ng-repeat="block in channel.contents">
-  
-  <div ng-if="block.class == 'Media'">
-    📺<b ng-bind-html-unsafe="block.source.url"></b>
-      <youtube-video video-url="block.source.url" class="burger"></youtube-video>
-      
-  </div>
-
-<div ng-if="block.class == 'Channel'">
-  <a href="#{{block.slug}}" title="">{{block.title}}</a>
-</div>
--->
 
 <youtube-video video-url="currentYouTube" player-vars="playerVars" class="fullvideo"></youtube-video>
 
-
-<!-- End Channel contents loop -->
-</main>
 <script type="text/javascript">
 var app = angular.module('arenaApp', ['ngResource', 'ngSanitize', 'youtube-embed', 'yaru22.md']);
 
