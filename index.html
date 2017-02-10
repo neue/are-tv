@@ -9,71 +9,101 @@
   <script src="//code.angularjs.org/1.1.5/angular-resource.min.js"></script>
   <script src="//code.angularjs.org/1.1.5/angular-sanitize.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.underscore.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="bower_components/angular-youtube-mb/src/angular-youtube-embed.js"></script>
+  <script src="bower_components/marked/lib/marked.js"></script>
+  <script src="bower_components/angular-md/dist/angular-md.min.js"></script>
   
   <style type="text/css" media="screen">
   * {
+    margin: 0;
+    padding: 0;
     font-family: "Space Mono", serif;
     font-weight: normal;
+    color: #0000ff;
   }
+  
+  .channelBug{
+    position: fixed;
+    top: 10px;
+    left: 10px;
+  }
+  
+  .fullvideo {
+    position: fixed;
+    left:-10%;
+    top:-10%;
+    overflow:hidden;
+    z-index:-1;
+    height:120%;
+    width:120%;  
+  }
+  
   </style>
 </head>
 
 <body ng-controller="channelShow">
 
-<header>
+<header class="channelBug">
   <h1>{{channel.title}}</h1>
-  <p ng-if="channel.metadata.description">{{channel.metadata.description}}</p>
+  <md ng-model="channel.metadata.description"></md>
+  
+  <!-- <p ng-if="channel.metadata.description">{{channel.metadata.description}}</p> -->
 </header>
 
-
+<!-- 
 <main ng-repeat="block in channel.contents">
-  <!-- Channel contents loop -->
-
-  <h4 ng-if="block.title" class="add-bottom">
-      {{block.title}} 
-      <span ng-if="block.class == 'Link'">
-          <a href="{{block.source.url}}" title="{{block.title}}">↳</a>
-      </span>
-      <span ng-if="block.class == 'Attachment'">
-          | <a href="{{block.source.url}}" title="{{block.title}}">Download</a>
-      </span>
-  </h4> 
-
-  <div ng-if="block.class == 'Image'">
-      <figure>
-        <img src="{{block.image.display.url}}" alt="{{block.title}}" class="scale-with-grid">
-        <figcaption ng-bind-html-unsafe="block.content_html"> </figcaption>
-      </figure>
-  </div>
-
-  <div ng-if="block.class == 'Attachment'">
-    <img src="{{block.image.display.url}}" alt="{{block.title}}" class="scale-with-grid add-bottom">
-  </div>
-
-  <script ng-if="block.class == 'Text'" ng-bind-html-unsafe="block.content_html">
-  </script>
-
+  
   <div ng-if="block.class == 'Media'">
-    📺<figcaption ng-bind-html-unsafe="block.source.url"></figure>
+    📺<b ng-bind-html-unsafe="block.source.url"></b>
+      <youtube-video video-url="block.source.url" class="burger"></youtube-video>
+      
   </div>
 
-  <div ng-if="block.class == 'Channel'">
-    <a href="#{{block.slug}}" title="">{{block.title}}</a>
-  </div>
+<div ng-if="block.class == 'Channel'">
+  <a href="#{{block.slug}}" title="">{{block.title}}</a>
+</div>
+-->
+
+<youtube-video video-url="currentShow" player-vars="playerVars" class="fullvideo"></youtube-video>
+
 
 <!-- End Channel contents loop -->
 </main>
 <script type="text/javascript">
-var app = angular.module('arenaApp', ['ngResource', 'ngSanitize']);
+var app = angular.module('arenaApp', ['ngResource', 'ngSanitize', 'youtube-embed', 'yaru22.md']);
 
 app.controller('channelShow', function($rootScope, $scope, $resource) { 
+  var shows = [];
+  var currentShow = 0;
   var Channel = $resource('http://api.are.na/v2/channels/:slug');
-  var channel = Channel.get({slug: 'video--6', sort: 'position', direction: 'asc'}, function(){
+  var channel = Channel.get({slug: 'api-playground', sort: 'position', direction: 'desc'}, function(){
     $scope.channel = channel;
     $rootScope.title = channel.title
     description = _.findWhere(document.getElementsByTagName('meta'), { 'name': 'description' });
     description.content = channel.metadata ? channel.metadata.description : '';
-    console.log(channel.contents);
+    console.log(channel);
+    for (var i = 0; i < channel.contents.length; i++) {
+      if (channel.contents[i].class == "Media") {
+        shows.push(channel.contents[i].source.url);
+      }
+    }
+    console.log(shows);
+    $scope.currentShow = shows[currentShow];
+    $scope.playerVars = {
+        controls: 0,
+        autoplay: 1
+    };
+    $scope.$on('youtube.player.ended', function ($event, player) {
+      // play it again
+      // player.playVideo();
+      currentShow++;
+      console.log("DONE MUFUKKA, next up:"+shows[currentShow]);
+      $scope.currentShow = shows[currentShow];
+      
+    });
+    
+    
   });
 })
 </script>
