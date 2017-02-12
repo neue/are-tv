@@ -1,4 +1,4 @@
 are-tv
 =====================
 
-Are.na TV, maybe.
+Are.na powered TV, maybe.
